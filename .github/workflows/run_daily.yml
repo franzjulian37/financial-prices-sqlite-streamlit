@@ -1,6 +1,6 @@
 # GitHub Action — `.github/workflows/run_daily.yml`
 
-```yaml
+```yml
 name: Daily prices + metrics update
 
 # Solo schedule (cron) e manual trigger per evitare loop da push
