@@ -34,7 +34,6 @@ jobs:
         run: |
           python load_prices_yf.py
           python compute_metrics_yf.py
-          python plot_results_yf.py
           python streamlit_app_yf.py
 
       - name: Commit and push data changes
