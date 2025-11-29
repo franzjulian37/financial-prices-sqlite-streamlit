@@ -5,7 +5,7 @@ A small project which downloads prices with `yfinance`, saves a SQLite DB, compu
 This project aims at showing a simple yet functioning data pipeline for financial applications. My humble opinion is that this is more relevant than a single colab notebook full of high-level financial math - something that nowadays AI can easily write for yourself - while real work is more about creating and maintaining complete systems, from data collection to visualization.
 
 ## Rep structure
-- `load_prices_yf.py` — download prices and sets `db/prices_yf.db`
+- `load_prices_yf.py` — download prices and sets `db/prices_yf.db`; creates `data/AAPL.csv`, `data/GOOG.csv`, `data/MSFT.csv`
 - `compute_metrics_yf.py` — reads DB, compute metrics and produces `data/METRICS_YF.csv`
 - `streamlit_app_yf.py` — app Streamlit which reads `data/METRICS_YF.csv` and generate dashboard
 - `db/` — SQLite DB folder (prices_yf.db)
