@@ -15,7 +15,7 @@ conn = sqlite3.connect(db_path)
 df = pd.read_sql("SELECT * FROM prices", conn, parse_dates=["date"])
 conn.close()
 
-# --- Data cleaning checks ----------------------------------------------------
+# --- Data cleaning checks "Non si sa mai"--------------------------------------
 
 # Controllo colonne attese
 expected_cols = {"date", "ticker", "close"}
@@ -23,13 +23,13 @@ missing_cols = expected_cols - set(df.columns)
 if missing_cols:
     raise ValueError(f"Missing expected columns in dataset: {missing_cols}")
 
-# Droppa righe completamente vuote (rarissimo ma buono da fare)
+# Droppa righe completamente vuote (non si sa mai)
 df.dropna(how="all", inplace=True)
 
 # Rimuove righe con NA nelle colonne critiche
 df.dropna(subset=["date", "ticker", "close"], inplace=True)
 
-# Converti date se non già convertite (robustezza)
+# Converti date se non già convertite (non si sa mai)
 df["date"] = pd.to_datetime(df["date"], errors="coerce")
 df.dropna(subset=["date"], inplace=True)
 
