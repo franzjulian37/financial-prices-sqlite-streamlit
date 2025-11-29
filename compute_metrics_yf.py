@@ -15,7 +15,32 @@ conn = sqlite3.connect(db_path)
 df = pd.read_sql("SELECT * FROM prices", conn, parse_dates=["date"])
 conn.close()
 
+# --- Data cleaning checks ----------------------------------------------------
+
+# Controllo colonne attese
+expected_cols = {"date", "ticker", "close"}
+missing_cols = expected_cols - set(df.columns)
+if missing_cols:
+    raise ValueError(f"Missing expected columns in dataset: {missing_cols}")
+
+# Droppa righe completamente vuote (rarissimo ma buono da fare)
+df.dropna(how="all", inplace=True)
+
+# Rimuove righe con NA nelle colonne critiche
+df.dropna(subset=["date", "ticker", "close"], inplace=True)
+
+# Converti date se non già convertite (robustezza)
+df["date"] = pd.to_datetime(df["date"], errors="coerce")
+df.dropna(subset=["date"], inplace=True)
+
+# Ordina i dati per sicurezza
+df.sort_values(by=["ticker", "date"], inplace=True)
+
+# Reset index pulito
+df.reset_index(drop=True, inplace=True)
+
 metrics_list = []
+
 
 for ticker in df["ticker"].unique():
     df_t = df[df["ticker"] == ticker].sort_values("date").copy()
