@@ -1,12 +1,40 @@
-# Ambiente virtuale
+# Virtualenvs / editors
 venv/
+.env/
+.venv/
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.iml
 
 # File compilati di Python
 __pycache__/
 *.pyc
+*.py[cod]
+*.so
+*.egg-info/
+*.egg
+pip-wheel-metadata/
+.python-version
 
 # Configurazioni di VS Code
 .vscode/
 
-# File di sistema
+# File di sistema - OS
 .DS_Store
+Thumbs.db
+
+# Pytest / tooling
+.pytest_cache/
+.mypy_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Do NOT ignore database or data CSVs because we want the workflow to push them
+# db/
+# data/
