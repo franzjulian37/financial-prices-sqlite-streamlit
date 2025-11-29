@@ -26,21 +26,21 @@ def load_metrics(csv_path: Path) -> pd.DataFrame:
 df = load_metrics(METRICS_CSV)
 
 # --- Header ---
-st.title("📈 Dashboard semplice — Prezzo e Volatilità")
-st.markdown("Mostra i dati calcolati dallo script. Usa la sidebar per scegliere ticker e intervallo.")
+st.title("📈 Price and volatility dashboard")
+st.markdown("Shows data computed by script. Use sidebar to choose ticker and interval.")
 
 # --- Sidebar: filtri ---
 with st.sidebar:
     st.header("Filtri")
     if df.empty:
-        st.warning("File csv non trovato. Esegui `compute_metrics_yf.py` prima di avviare Streamlit.")
+        st.warning("File csv not found. Execute `compute_metrics_yf.py` before running Streamlit.")
     else:
         tickers = sorted(df["ticker"].unique())
-        selectors = st.multiselect("Scegli ticker", options=tickers, default=tickers[:2] if tickers else [])
+        selectors = st.multiselect("Choose ticker", options=tickers, default=tickers[:2] if tickers else [])
         min_date = df["date"].min().date()
         max_date = df["date"].max().date()
-        date_range = st.date_input("Intervallo date", value=(min_date, max_date), min_value=min_date, max_value=max_date)
-        show_table = st.checkbox("Mostra tabella dati", value=False)
+        date_range = st.date_input("Dates interval", value=(min_date, max_date), min_value=min_date, max_value=max_date)
+        show_table = st.checkbox("Show data table", value=False)
 
 # --- Main: filtra dati ---
 if not df.empty and selectors:
@@ -49,10 +49,10 @@ if not df.empty and selectors:
     df_f = df.loc[mask].copy()
 
     if df_f.empty:
-        st.info("Nessun dato per i filtri selezionati.")
+        st.info("No data for the selected filter.")
     else:
         # Grafico 1: Prezzo storico (interattivo)
-        st.subheader("Prezzo di chiusura")
+        st.subheader("Closing price")
         fig_price = px.line(
             df_f,
             x="date",
@@ -65,20 +65,20 @@ if not df.empty and selectors:
         st.plotly_chart(fig_price, use_container_width=True)
 
         # Grafico 2: Volatilità rolling 30d
-        st.subheader("Volatilità rolling 30 giorni")
+        st.subheader("30-days rolling volatility")
         fig_vol = px.line(
             df_f,
             x="date",
             y="vol_30d",
             color="ticker",
-            title="Volatilità 30 giorni",
+            title="volatility (30d rolling)",
             labels={"vol_30d": "Volatilità"}
         )
         fig_vol.update_layout(height=380, margin=dict(l=20,r=20,t=40,b=20))
         st.plotly_chart(fig_vol, use_container_width=True)
 
         # Tabelle / statistiche aggregate
-        st.subheader("Metriche riassuntive")
+        st.subheader("Metrics")
         summary = df_f.groupby("ticker").agg(
             first_date=("date", "min"),
             last_date=("date", "max"),
@@ -93,15 +93,15 @@ if not df.empty and selectors:
         st.dataframe(summary)
 
         if show_table:
-            st.subheader("Dati grezzi filtrati")
+            st.subheader("Filtered raw data")
             st.dataframe(df_f.sort_values(["ticker", "date"]).reset_index(drop=True))
 
         # Download CSV del sottoinsieme
         csv_bytes = df_f.to_csv(index=False).encode("utf-8")
-        st.download_button("Scarica CSV filtrato", data=csv_bytes, file_name="metrics_filtered.csv", mime="text/csv")
+        st.download_button("Download filtered csv", data=csv_bytes, file_name="metrics_filtered.csv", mime="text/csv")
 
 else:
     if df.empty:
-        st.info("metrics.csv non trovato o vuoto.")
+        st.info("metrics.csv not found or empty.")
     else:
-        st.info("Seleziona almeno un ticker nella sidebar.")
+        st.info("Select at least a ticker in the sidebar.")
