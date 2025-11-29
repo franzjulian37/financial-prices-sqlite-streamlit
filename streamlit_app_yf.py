@@ -26,7 +26,7 @@ def load_metrics(csv_path: Path) -> pd.DataFrame:
 df = load_metrics(METRICS_CSV)
 
 # --- Header ---
-st.title("📈 Price and volatility dashboard")
+st.title("📈 Stock metrics dashboard")
 st.markdown("Shows data computed by script. Use sidebar to choose ticker and interval.")
 
 # --- Sidebar: filtri ---
